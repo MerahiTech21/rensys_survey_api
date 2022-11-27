@@ -17,7 +17,7 @@ exports.getSurvey = async (req, res, next) => {
   try {
     const survey = await Survey.findByPk(req.params.id);
     if (!survey) {
-      res.status(404).json({
+     return res.status(404).json({
         msg: `There is no Survey with id=${req.params.id}`,
       });
     }
@@ -55,16 +55,32 @@ exports.updateSurvey = async (req, res, next) => {
     survey.description = req.body.description;
     survey.openingAt = req.body.openingAt;
     survey.closingAt= req.body.closingAt;
-    survey.status= req.body.status;
+    // survey.status= req.body.status;
 
     const updatedSurvey = await survey.save();
     res.status(200).json(updatedSurvey);
   } catch (e) {
-    res.status(422).json({
+    res.status(400).json({
       msg: "Faild to update Survey",
     });
   }
 };
+
+exports.changeSurveyStatus= async (req, res, next)=>{
+   try{
+      const survey= await Survey.findByPk(req.params.id);
+      if(!survey)
+       return res.status(404).json({msg: `Faild to find survery with id =${req.params.id}`});
+      survey.status=!survey.status;
+     const updatedSurvey= await survey.save();
+      res.status(200).json(updatedSurvey);
+   }catch(e){
+    res.status(400).json({
+      msg: "Faild to change survey status",
+      error: e.toString()
+    });
+   }
+}
 
 exports.deleteSurvey = async (req, res, next) => {
   try {

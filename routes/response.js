@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {createResponse} = require("../controllers/response")
+const {createResponse, getResponseSummary, getIndividualResponse} = require("../controllers/response")
 router.route('/').post(createResponse);
-
-module.exports= router;
+router.route('/:surveyId').get(getResponseSummary);
+router.route('/individual/:surveyId').get(getIndividualResponse);
+module.exports= router; 

@@ -1,8 +1,9 @@
 const express = require("express");
-const {createQuestion, getQuestions} = require("../controllers/question")
+const {createQuestion, getQuestions,deleteQuestion,updateQuestion} = require("../controllers/question")
 const router = express.Router();
 
 router.route('/').post(createQuestion);
+//get qu
 router.route('/:surveyId').get(getQuestions);
-
+router.route('/:id').delete(deleteQuestion).put(updateQuestion);
 module.exports = router;  
