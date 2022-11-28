@@ -6,7 +6,8 @@ const Question= require('../models/Question');
 const Response= require("../models/Response");
 const ResponseChoice= require("../models/ResponseChoice");
 const Survey= require("../models/Survey.js");
-
+const User = require("../models/User");
+  
 Survey.hasMany(Question,{onDelete:'CASCADE', onUpdate:'CASCADE',foreignKey: {
   allowNull: false
 }});
@@ -22,12 +23,12 @@ Response.belongsTo(Question);
 
 Respondent.hasMany(Response,{onDelete:'CASCADE', onUpdate:'CASCADE'});
 Response.belongsTo(Respondent);
- 
+  
 Question.hasMany(ResponseChoice, {onDelete:'CASCADE', onUpdate:'CASCADE'});
 ResponseChoice.belongsTo(Question);
-
+  
 sequelize.sync({force:false}).then(()=>{
       console.log('re-sync is done')
-  }).catch((err)=>{
+  }).catch((err)=>{ 
     console.log('sequelize err',err);
   });

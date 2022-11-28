@@ -9,6 +9,7 @@ const surveyRoute= require('./routes/survey');
 const questionRoute = require('./routes/question'); 
 const responseRoute= require("./routes/response");
 const respondentRoute = require("./routes/respondent");
+const authRouter = require("./routes/auth")
 const app = express();
 
 app.use(logger('dev')); 
@@ -21,6 +22,7 @@ app.use('/api/surveys', surveyRoute);
 app.use('/api/questions', questionRoute);
 app.use("/api/responses",responseRoute)
 app.use("/api/respondents", respondentRoute);
+app.use("/api/users", authRouter);
 require('./config/database.js'); 
-
+    
 module.exports = app;
