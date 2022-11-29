@@ -6,18 +6,18 @@ const sendEmail = async (email, subject, text) => {
         // let testAccount = await nodemailer.createTestAccount();
         const transporter = nodemailer.createTransport({
             // host: process.env.HOST,
-            service: process.env.USER,
+            service: process.env.SERVICE,
             port: 587,
             secure: false,
             auth: {
                 user: process.env.USER,
                 pass: process.env.PASS,
             },
-        });
+        });   
 
-        await transporter.sendMail({
-            from: process.env.USER,
-            to: email,
+         transporter.sendMail({
+            from: '<no-reply@accounts.googl.com>',
+            to: 'alemteb1010@gmail.com',
             subject: subject,
             text: text,
         },(err,data)=>{
