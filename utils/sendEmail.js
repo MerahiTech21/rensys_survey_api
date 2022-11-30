@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 
-
 const sendEmail = async (email, subject, text) => {
     // try {
         // let testAccount = await nodemailer.createTestAccount();
@@ -17,7 +16,7 @@ const sendEmail = async (email, subject, text) => {
 
          transporter.sendMail({
             from: '<no-reply@accounts.googl.com>',
-            to: 'alemteb1010@gmail.com',
+            to: email,
             subject: subject,
             text: text,
         },(err,data)=>{
@@ -29,10 +28,6 @@ const sendEmail = async (email, subject, text) => {
                 console.log("email😉 sent sucessfully"); 
             }
         });
-
-    // } catch (error) {
-    //     console.log(error, "email not sent");
-    // }
 };
 
 module.exports = sendEmail;

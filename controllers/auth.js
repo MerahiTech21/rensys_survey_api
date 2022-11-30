@@ -1,7 +1,7 @@
 
 const User = require("../models/User")
-const sendEmail = require("./utils/sendEmail");
-const sendSMS = require('./utils/sendSMS');
+const sendEmail = require("../utils/sendEmail");
+const sendSMS = require('../utils/sendSMS');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { application } = require("express");
@@ -80,8 +80,8 @@ exports.forgotPassword = async (req, res, next) => {
     const token = Math.floor(100000 + Math.random() * 900000);
     user.resetToken = token;
     await user.save();
-
-    await sendEmail(user.email, "Password Reset", `${token}`);
+     await sendEmail();
+    // await sendEmail(user.email, "Password Reset", `${token}`);
     // await sendSMS('+251975752668',"Here we go")
     res.status(200).send(`We have sent email to ${user.email}`);
   } catch (e) {
@@ -130,3 +130,11 @@ exports.resetForgotPassword = async (req, res, next) => {
 
 };
 
+exports.sendSMS1= async (req,res)=>{
+  try{
+    sendSMS();
+  }
+  catch(e){
+    console.log("faild to send email 🙌", e)
+  }
+}
