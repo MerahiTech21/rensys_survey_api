@@ -132,7 +132,8 @@ exports.resetForgotPassword = async (req, res, next) => {
 
 exports.sendSMS1= async (req,res)=>{
   try{
-    sendSMS();
+    sendSMS("Test 123");
+    res.send("Working good");
   }
   catch(e){
     console.log("faild to send email 🙌", e)
