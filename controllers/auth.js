@@ -132,7 +132,7 @@ exports.resetForgotPassword = async (req, res, next) => {
 
 exports.sendSMS1= async (req,res)=>{
   try{
-    sendSMS("Test 123");
+    sendSMS("+251975752668","Test 123");
     res.send("Working good");
   }
   catch(e){
