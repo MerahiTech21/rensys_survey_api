@@ -4,7 +4,6 @@ const sendEmail = require("../utils/sendEmail");
 const sendSMS = require('../utils/sendSMS');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { application } = require("express");
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -47,8 +46,7 @@ exports.login = async (req, res) => {
     bcrypt.compare(req.body.password, user.password, function (err, resp) {
       if (err) {
         // handle error
-        return res.status(500).json({ error: err })
-
+        return res.status(400).json({ error: err })
       }
       if (resp) {
         // Send JWT
@@ -61,9 +59,6 @@ exports.login = async (req, res) => {
       }
     });
 
-
-    // const token = jwt.sign(user, process.env.Access_TOKEN_SECURE);
-    // res.status(200).json({ token, user: user })
   }
   catch (e) {
     res.status(404).send(e.toString())
@@ -81,8 +76,7 @@ exports.forgotPassword = async (req, res, next) => {
     user.resetToken = token;
     await user.save();
      await sendEmail();
-    // await sendEmail(user.email, "Password Reset", `${token}`);
-    // await sendSMS('+251975752668',"Here we go")
+    await sendEmail(user.email, "Password Reset", `${token}`);
     res.status(200).send(`We have sent email to ${user.email}`);
   } catch (e) {
     res.status(400).send(e.toString());

@@ -1,13 +1,13 @@
 const Sequelize= require('sequelize');
 const {DataTypes} = require('sequelize');
 
-const sequelize= new Sequelize('merahitechnologi_survey_system','merahitechnologi_cold_room_user','TxEIrmaZ4k(U',{dialect:'mysql',host:'merahitechnologies.com',port:'3306',});
+const sequelize= new Sequelize(process.env.DATABASE_NAME,
+    process.env.DATABASE_USER_NAME,
+    process.env.DATABASE_PASSWORD,
+    {
+      dialect:'mysql',
+      host:process.env.DATABASE_HOST,
+      port:'3306',
+  });
 
-// try { 
-//     sequelize.authenticate();   
-//     console.log('Sequelize Connection has been established successfully.'); 
-//   } catch (error) {
-//     console.log('Sequelize Unable to connect to the database:');
-//   }
-    
 module.exports= sequelize;
