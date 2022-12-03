@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
       }
       if (resp) {
         // Send JWT
-        const token = jwt.sign({...user.dataValues}, process.env.Access_TOKEN_SECURE);
+        const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
         res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
 
       } else {
@@ -75,7 +75,6 @@ exports.forgotPassword = async (req, res, next) => {
     const token = Math.floor(100000 + Math.random() * 900000);
     user.resetToken = token;
     await user.save();
-     await sendEmail();
     await sendEmail(user.email, "Password Reset", `${token}`);
     res.status(200).send(`We have sent email to ${user.email}`);
   } catch (e) {
@@ -85,51 +84,61 @@ exports.forgotPassword = async (req, res, next) => {
 };
 
 exports.verifyToken = async (req, res, next) => {
-  const { tokenCode, email } = req.body;
-  const user = await User.findOne({ where: { email } });
-  if (!user) {
-    return res.status(404).json({ msg: `User not found with email=${email}` });
+  try {
+    const { tokenCode, email } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ msg: `User not found with email=${email}` });
+    }
+    //it should be compared by jwt
+    if (tokenCode == user.resetToken) {
+
+      user.resetToken = '';
+    await user.save();
+    const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
+    res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
+
+    }else{
+      
+      return res.status(400).json({ msg: 'invalid or expired token' })
+    }
+    
+  } catch (e) {
+    console.log(e)
+    res.status(400).send({error:e.toString()})
   }
-  //it should be compared by jwt
-  if (!tokenCode === user.resetToken) {
-    return res.status(400).json({ msg: 'invalid or expired token' })
-  }
-   user.resetToken='';
-  await user.save();
-  const token = jwt.sign({ ...user.dataValues }, process.env.Access_TOKEN_SECURE);
-  res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
-  // let it loign 
+
 };
 
 
 exports.resetForgotPassword = async (req, res, next) => {
-  try{
+  try {
     const { newPassword } = req.body;
-  const user = await User.findByPk(req.user.id);
-  if(!user) return res.status(404).json({msg:"faild", user: req.user});
-  bcrypt.hash(newPassword, 10, (err, hash) => {
-    if (err) {
-      return res.status(500).json({ error: err.toString() })
-    } else {
-      user.password = hash;
-      user.save().then((user) => {
-        return res.status(200).json({ msg:"Password is changed successfully"});
-      });
+    const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ msg: "faild", user: req.user });
+    bcrypt.hash(newPassword, 10, (err, hash) => {
+      if (err) {
+        return res.status(500).json({ error: err.toString() })
+      } else {
+        user.password = hash;
+        user.save().then((user) => {
+          return res.status(200).json({ msg: "Password is changed successfully" });
+        });
 
-    }
-  })
-  }catch(e){
-   res.status(400).json({error:e})
+      }
+    })
+  } catch (e) {
+    res.status(400).json({ error: e })
   }
 
 };
 
-exports.sendSMS1= async (req,res)=>{
-  try{
-    sendSMS("+251975752668","Test 123");
+exports.sendSMS1 = async (req, res) => {
+  try {
+    sendSMS("+251975752668", "Test 123");
     res.send("Working good");
   }
-  catch(e){
+  catch (e) {
     console.log("faild to send email 🙌", e)
   }
 }
