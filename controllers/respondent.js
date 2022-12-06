@@ -1,6 +1,7 @@
 const Respondent = require("../models/Respondent")
 
 exports.createRespondent=async (resp)=>{
+    console.log(resp)
 return await Respondent.create({
        name: resp.name,
        phoneNo:resp.phoneNo,

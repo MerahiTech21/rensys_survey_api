@@ -6,14 +6,46 @@ const ResponseChoice = require("../models/ResponseChoice");
 
 exports.createResponse = async (req, res, next) => {
   try {
-    const { name, phoneNo, region, zone, woreda, kebele } = req.body
-    const respondent = await createRespondent({ name, phoneNo, region, zone, woreda, kebele });
-    const response = await Response.bulkCreate([
-      ...req.body.response.map((item) => { return { respondentId: respondent.id, ...item } })
-    ]);
+    const { name, phoneNumber, region, zone, woreda, kebele } = req.body.userData;
+    // const respondent = await createRespondent({ name, phoneNo:phoneNumber, region, zone, woreda, kebele });
+
+
+    const respondent =   await Respondent.create({
+       name,
+      phoneNo:phoneNumber,
+      region,
+       zone,
+       woreda,
+       kebele,
+       surveyId:req.body.surveyId
+   });   
+    // req.body.questionResponses
+   let responses= []
+   req.body.questionResponses.forEach((response)=>{
+   if(response.multipleAnswer?.length>0){
+     response.multipleAnswer?.forEach((ans)=>{
+       
+       responses.push({
+        respondentId:respondent.id,
+        questionId: response.questionId,
+         answer:ans
+       } )
+
+      }    
+    ); 
+    return;
+   }
+    responses.push({respondentId:respondent.id, answer: response.answer, questionId: response.questionId});
+   });
+
+    const response = await Response.bulkCreate(
+      responses
+      // ...req.body.response.map((item) => { return { respondentId: respondent.id, ...item } })
+  );
     res.status(201).json({ ...respondent.dataValues, response });
   } catch (e) {
-    res.status(500).json({ msg: "Faild to save response", error: e.toString() })
+    console.log(e);
+    res.status(400).json({ msg: "Faild to save response", error: e.toString() })
   }
 
 }

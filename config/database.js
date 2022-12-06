@@ -15,9 +15,8 @@ Question.belongsTo(Survey);
 Survey.hasMany(Respondent, {foreignKey:{allowNull:false}})
 Respondent.belongsTo(Survey);
 
-Question.belongsToMany(Respondent, {through:Response});
-Respondent.belongsToMany(Question, {through: Response});
-
+Question.belongsToMany(Respondent, {through:{model:Response,unique:false} });
+Respondent.belongsToMany(Question, {through: {model:Response,unique:false} });
 Question.hasMany(Response, {onDelete:'CASCADE', onUpdate:'CASCADE'});
 Response.belongsTo(Question);
 
@@ -27,7 +26,7 @@ Response.belongsTo(Respondent);
 Question.hasMany(ResponseChoice, {onDelete:'CASCADE', onUpdate:'CASCADE'});
 ResponseChoice.belongsTo(Question);
   
-sequelize.sync({force:false}).then(()=>{
+sequelize.sync({alter:true}).then(()=>{
       console.log('re-sync is done')
   }).catch((err)=>{ 
     console.log('sequelize err',err);
