@@ -75,12 +75,29 @@ exports.getResponseSummary = async (req, res, next) => {
       let count = {};
       responses.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
 
-      if (question.type != "short") {
+      if (question.type !="linear" && question.type != "short") {
         let choices = question.responseChoices.map((item) => item.text);
         for (let choice of choices) {
           count[choice] = count[choice] || 0;
         } 
       } 
+        
+      if(question.type =="linear"){
+        let choices = question.responseChoices.map((item) => item.text);
+        let min= Math.min.apply(null, choices);
+        let max= Math.max.apply(null, choices);
+
+
+        choices= Array.from({length: max-min+1}, (_, i) => min+i+'')
+        for (let choice of choices) {
+          count[choice] = count[choice] || 0;
+        } 
+
+      
+
+
+      }
+
       summary.push({ text: question.text, type: question.type, order: question.order, require: question.require, responses: count })
     });
     res.status(200).json(summary);
