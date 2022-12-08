@@ -26,7 +26,7 @@ Response.belongsTo(Respondent);
 Question.hasMany(ResponseChoice, {onDelete:'CASCADE', onUpdate:'CASCADE'});
 ResponseChoice.belongsTo(Question);
   
-sequelize.sync({alter:true}).then(()=>{
+sequelize.sync({force:false}).then(()=>{
       console.log('re-sync is done')
   }).catch((err)=>{ 
     console.log('sequelize err',err);

@@ -76,17 +76,17 @@ exports.getResponseSummary = async (req, res, next) => {
       responses.forEach(function (i) { count[i] = (count[i] || 0) + 1; });
 
       if (question.type != "short") {
-        let choices = question.responseChoice.map((item) => item.text);
+        let choices = question.responseChoices.map((item) => item.text);
         for (let choice of choices) {
           count[choice] = count[choice] || 0;
-        }
-      }
+        } 
+      } 
       summary.push({ text: question.text, type: question.type, order: question.order, require: question.require, responses: count })
     });
     res.status(200).json(summary);
 
 
   } catch (e) {
-
+     res.status(400).json({error:e.toString()});
   }
 }

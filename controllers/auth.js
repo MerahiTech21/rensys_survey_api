@@ -4,6 +4,8 @@ const sendEmail = require("../utils/sendEmail");
 const sendSMS = require('../utils/sendSMS');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Respondent = require("../models/Respondent")
+const sequelize = require("../config/db")
 
 exports.createUser = async (req, res, next) => {
   try {
@@ -94,18 +96,18 @@ exports.verifyToken = async (req, res, next) => {
     if (tokenCode == user.resetToken) {
 
       user.resetToken = '';
-    await user.save();
-    const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
-    res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
+      await user.save();
+      const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
+      res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
 
-    }else{
-      
+    } else {
+
       return res.status(400).json({ msg: 'invalid or expired token' })
     }
-    
+
   } catch (e) {
     console.log(e)
-    res.status(400).send({error:e.toString()})
+    res.status(400).send({ error: e.toString() })
   }
 
 };
@@ -133,12 +135,34 @@ exports.resetForgotPassword = async (req, res, next) => {
 
 };
 
+// exports.sendSMS1 = async (req, res) => {
+//   try {
+//     sendSMS("+251975752668", "Test 123");
+//     res.send("Working good");
+//   }
+//   catch (e) {
+//     console.log("faild to send email 🙌", e)
+//   }
+// }
+// trail request
+
 exports.sendSMS1 = async (req, res) => {
   try {
-    sendSMS("+251975752668", "Test 123");
-    res.send("Working good");
-  }
-  catch (e) {
-    console.log("faild to send email 🙌", e)
+    const respondent = await Respondent.findAll({
+      // attributes:[
+      //   "name",
+      //   "woreda",
+      //  [sequelize.fn('COUNT',sequelize.col('woreda')),'n_Woreda'] 
+      // ],
+      // group:["woreda"]
+      order:
+       [
+        [sequelize.fn('max', sequelize.col('name')), 'ASC'] 
+      ]
+    });
+    res.status(200).json({ respondent });
+  } catch (e) {
+    console.log('Faild ur request 🙌');
+    res.status(400).json({ msg: 'Check ur pocket', e })
   }
 }
