@@ -1,5 +1,4 @@
 const sequelize= require('../config/db');
-const {DataTypes} = require('sequelize');
 
 const Respondent= require('../models/Respondent');
 const Question= require('../models/Question');
