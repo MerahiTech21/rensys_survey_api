@@ -3,7 +3,6 @@ const Survey = require('../models/Survey');
 exports.getSurveys = async (req, res, next) => {
   try {
     const surveys = await Survey.findAll();
- 
     res.status(200).json(surveys);
    
   } catch (e) {
@@ -30,7 +29,6 @@ exports.getSurvey = async (req, res, next) => {
 };
 exports.createSurvey = async (req, res, next) => {
   try {
-
     const survey = await Survey.create({
       name: req.body.name,
       description: req.body.description,
@@ -90,6 +88,28 @@ exports.deleteSurvey = async (req, res, next) => {
   } catch (e) {
     res.status(404).json({
       msg: "Faild to delete a Survey",
+    });
+  }
+};
+
+exports.WSTrial = async (req, res, next) => {
+  try {
+    res.status(200).json('msg');
+  } catch (e) {
+    res.status(404).json({
+      msg: "Faild to delete a Survey",
+      e
+    });
+  }
+};
+
+exports.WSTrialEcho = async (req, res, next) => {
+  try {
+    res.status(200).json(req.body);
+  } catch (e) {
+    res.status(404).json({
+      msg: "Faild to delete a Survey",
+      error:e
     });
   }
 };

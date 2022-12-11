@@ -4,6 +4,7 @@ const Response = require("../models/Response");
 const Survey = require("../models/Survey");
 const ResponseChoice = require("../models/ResponseChoice");
 const {Op} = require("sequelize")
+
 exports.createResponse = async (req, res, next) => {
   try {
     const { name, phoneNumber, region, zone, woreda, kebele } = req.body.userData;
@@ -12,7 +13,7 @@ exports.createResponse = async (req, res, next) => {
       phoneNo: phoneNumber,
       region,
       zone,
-      woreda,
+      woreda, 
       kebele,
       surveyId: req.body.surveyId
     });
@@ -21,13 +22,11 @@ exports.createResponse = async (req, res, next) => {
     req.body.questionResponses.forEach((response) => {
       if (response.multipleAnswer?.length > 0) {
         response.multipleAnswer?.forEach((ans) => {
-
           responses.push({
             respondentId: respondent.id,
             questionId: response.questionId,
             answer: ans
           })
-
         }
         );
         return;
