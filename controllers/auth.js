@@ -120,7 +120,7 @@ exports.resetForgotPassword = async (req, res, next) => {
   try {
     const { newPassword } = req.body;
     const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).json({ msg: "faild", user: req.user });
+    if (!user) return res.status(404).json({ msg: "faild"});
     bcrypt.hash(newPassword, 10, (err, hash) => {
       if (err) {
         return res.status(500).json({ error: err.toString() })
@@ -142,7 +142,7 @@ exports.resetPassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).json({ msg: "faild", user: req.user });
+    if (!user) return res.status(404).json({ msg: "faild"});
 
     bcrypt.compare(oldPassword, user.password, function (err, resp) {
       if (err) {
@@ -176,34 +176,3 @@ exports.resetPassword = async (req, res, next) => {
 
 };
 
-// exports.sendSMS1 = async (req, res) => {
-//   try {
-//     sendSMS("+251975752668", "Test 123");
-//     res.send("Working good");
-//   }
-//   catch (e) {
-//     console.log("faild to send email 🙌", e)
-//   }
-// }
-// trail request
-
-exports.sendSMS1 = async (req, res) => {
-  try {
-    const respondent = await Respondent.findAll({
-      // attributes:[
-      //   "name",
-      //   "woreda",
-      //  [sequelize.fn('COUNT',sequelize.col('woreda')),'n_Woreda'] 
-      // ],
-      // group:["woreda"]
-      order:
-        [
-          [sequelize.fn('max', sequelize.col('name')), 'ASC']
-        ]
-    });
-    res.status(200).json({ respondent });
-  } catch (e) {
-    console.log('Faild ur request 🙌');
-    res.status(400).json({ msg: 'Check ur pocket', e })
-  }
-}
