@@ -13,7 +13,6 @@ const { getSurveys,
 router.route('/').get(getSurveys).post(createSurvey);
 router.route('/:id').get(getSurvey).delete(deleteSurvey).put(updateSurvey);
 router.route('/status/:id').put(changeSurveyStatus);
-// router.route('/ws-echo').get(WSTrial)
 router.route("/ws/echo").get(WSTrial)
 router.route("/ws/create/echo").post(WSTrialEcho)
 module.exports = router;

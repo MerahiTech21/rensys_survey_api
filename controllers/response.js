@@ -3,7 +3,7 @@ const Respondent = require("../models/Respondent");
 const Response = require("../models/Response");
 const Survey = require("../models/Survey");
 const ResponseChoice = require("../models/ResponseChoice");
-const {Op} = require("sequelize")
+const { Op } = require("sequelize")
 
 exports.createResponse = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ exports.createResponse = async (req, res, next) => {
       phoneNo: phoneNumber,
       region,
       zone,
-      woreda, 
+      woreda,
       kebele,
       surveyId: req.body.surveyId
     });
@@ -50,25 +50,26 @@ exports.getIndividualResponse = async (req, res, next) => {
   try {
     const survey = await Survey.findByPk(req.params.surveyId)
     if (!survey) {
-      return res.status(404).json({ msg: `Couldn't find a survey with id=${req.params.surveryId}` });
+      return res.status(404).json({ msg: `Couldn't find a survey with id=${req.params.surveyId}` });
     }
     const individualResponse = await Respondent.findAll({
-     required:true,
+      required: true,
       include: {
-        model: Question, 
-        required:true,
+        model: Question,
+        required: true,
         include: [
-          { model: Response ,
-            attributes:['answer', 'respondentId'],
+          {
+            model: Response,
+            attributes: ['answer', 'respondentId'],
             where: {
-              respondentId:{
+              respondentId: {
                 [Op.col]: 'respondent.id'
               }
             },
           },
-          { 
+          {
             model: ResponseChoice
-           }]
+          }]
       },
       where: { surveyId: req.params.surveyId }
     })
@@ -82,7 +83,7 @@ exports.getIndividualResponse = async (req, res, next) => {
 exports.getResponseSummary = async (req, res, next) => {
   try {
     const questions = await Question.findAll({
-      Where: { surveyId: req.params.surveryId },
+      where: { surveyId: req.params.surveyId },
       include: [{ model: Response, attributes: ['answer'] }, { model: ResponseChoice, attributes: ['text'] }]
     });
 

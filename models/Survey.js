@@ -12,9 +12,9 @@ const Survey = sequelize.define('survey', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    status:{
-      type:DataTypes.INTEGER,
-      defaultValue:0
+    status: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
     description: {
         type: DataTypes.STRING,
@@ -22,11 +22,11 @@ const Survey = sequelize.define('survey', {
     },
     openingAt: {
         type: DataTypes.DATE,
-        allowNull:false
+        allowNull: false
     },
     closingAt: {
         type: DataTypes.DATE,
-        allowNull:false
+        allowNull: false
     }
 
 },
