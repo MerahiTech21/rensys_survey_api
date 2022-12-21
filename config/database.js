@@ -6,6 +6,7 @@ const Response= require("../models/Response");
 const ResponseChoice= require("../models/ResponseChoice");
 const Survey= require("../models/Survey.js");
 const User = require("../models/User");
+const Encoder = require('../models/Encoder');
   
 Survey.hasMany(Question,{onDelete:'CASCADE', onUpdate:'CASCADE',foreignKey: {
   allowNull: false
@@ -24,8 +25,22 @@ Response.belongsTo(Respondent);
   
 Question.hasMany(ResponseChoice, {onDelete:'CASCADE', onUpdate:'CASCADE'});
 ResponseChoice.belongsTo(Question);
-  
+/**
+ *  start codes  added by Alemu
+ */
+Survey.hasMany(Encoder);
+Encoder.belongsTo(Survey);
+Encoder.hasMany(Response)
+Response.belongsTo(Encoder)
+Encoder.hasMany(Respondent)
+Respondent.belongsTo(Encoder)
+
+/**
+ * end codes added by Alemu
+ */
+
 sequelize.sync({force:false}).then(()=>{
+  
       console.log('re-sync is done')
   }).catch((err)=>{ 
     console.log('sequelize err',err);
