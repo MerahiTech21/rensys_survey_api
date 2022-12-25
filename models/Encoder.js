@@ -21,6 +21,9 @@ const Encoder=sequelize.define('encoder',{
     password:{
         type:DataTypes.STRING,
         allowNull:false
+    },   resetToken:{
+        type:DataTypes.STRING,
+        allowNull:true
     }
 });
 

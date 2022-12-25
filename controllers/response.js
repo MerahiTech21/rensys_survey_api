@@ -7,10 +7,10 @@ const { Op } = require("sequelize")
 
 exports.createResponse = async (req, res, next) => {
   try {
-    const { name, phoneNumber, region, zone, woreda, kebele } = req.body.userData;
+    const { name, phoneNo, region, zone, woreda, kebele } = req.body.userData;
     const respondent = await Respondent.create({
       name,
-      phoneNo: phoneNumber,
+      phoneNo,
       region,
       zone,
       woreda,

@@ -6,6 +6,7 @@ const Response = require("../models/Response");
 const ResponseChoice = require("../models/ResponseChoice");
 const Question = require("../models/Question");
 const { Op } = require("sequelize");
+const jwt=require('jsonwebtoken')
 
 exports.createEncoder = async (req, res) => {
   try {
@@ -80,7 +81,8 @@ exports.getEncoderResponses = async (req, res, next) => {
               model: ResponseChoice
              }]
         },
-        where: { encoderId: req.params.id }
+        where: { encoderId: req.params.id },
+        order:[['createdAt','DESC']]
       })
   
       res.status(200).json(individualResponse);
@@ -93,20 +95,24 @@ exports.getEncoderResponses = async (req, res, next) => {
 exports.login = async (req, res) => {
     try {
   
-      const encoder = await Encoder.findOne({ where: { phoneNo: req.body.phoneNo } });
+      const encoder = await Encoder.findOne({ where: { phoneNo: req.body.phoneNo },include:Survey });
       if (!encoder) {
-        return res.status(404).json({ msg: "Faild to login" });
+        return res.status(404).json({ msg: "No Account Exist" });
       }
   
+      if(!encoder.surveyId){
+        return res.status(404).json({ msg: "Ohh You are Not Assigned" });
+
+      }
       bcrypt.compare(req.body.password, encoder.password, function (err, resp) {
         if (err) {
           // handle error
-          return res.status(400).json({ error: err })
+          return res.status(400).json({ error: "Error "+err })
         }
         if (resp) {
           // Send JWT
           const token = jwt.sign({ ...encoder.dataValues }, process.env.ACCESS_TOKEN_SECURE);
-          res.status(200).json({ token, name: encoder.name, phoneNo: encoder.phoneNo })
+          res.status(200).json({ token, name: encoder.name,id: encoder.id, phoneNo: encoder.phoneNo,survey:encoder.survey })
         } else {
           // response is OutgoingMessage object that server response http request
           return res.status(400).json({ success: false, msg: 'passwords do not match' });
@@ -115,8 +121,10 @@ exports.login = async (req, res) => {
   
     }
     catch (e) {
-      res.status(404).send(e.toString())
+      res.status(404).json("Error "+e)
     }
   
 }
+
+
  

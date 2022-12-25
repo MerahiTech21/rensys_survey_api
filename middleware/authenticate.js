@@ -10,13 +10,15 @@ module.exports = (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
   try {
-    const user = jwt.verify(token, process.env.Access_TOKEN_SECURE);
+    const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECURE);
     req.user = user;
     next();
-  } catch (error) {
+  } catch (error) { 
+         console.log('Err'+error)
+
     res.status(401).json({
         status: 'fail',
         message: 'Unauthorized!',
-      });
+      }); 
   }
-};
+}; 

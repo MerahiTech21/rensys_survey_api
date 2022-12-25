@@ -56,14 +56,14 @@ exports.login = async (req, res) => {
       if (resp) {
         // Send JWT
         const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
-        res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
+        res.status(200).json({ token,id: user.id, name: user.name, email: user.email, phoneNo: user.phoneNo })
 
       } else {
         // response is OutgoingMessage object that server response http request
         return res.status(400).json({ success: false, msg: 'passwords do not match' });
       }
     });
-
+ 
   }
   catch (e) {
     res.status(404).send(e.toString())
@@ -101,7 +101,7 @@ exports.verifyToken = async (req, res, next) => {
       user.resetToken = '';
       await user.save();
       const token = jwt.sign({ ...user.dataValues }, process.env.ACCESS_TOKEN_SECURE);
-      res.status(200).json({ token, name: user.name, email: user.email, phoneNo: user.phoneNo })
+      res.status(200).json({ token, id: user.id,name: user.name, email: user.email, phoneNo: user.phoneNo })
 
     } else {
 
